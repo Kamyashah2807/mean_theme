@@ -1,26 +1,24 @@
 import { Injectable } from '@angular/core';
-import { Observable, ReplaySubject } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
 
-import { User } from '../models';
+const API_URL = 'http://localhost:8080/api/test/';
 
-const userSubject: ReplaySubject<User> = new ReplaySubject(1);
-
-@Injectable()
+@Injectable({
+    providedIn: 'root'
+})
 export class UserService {
-    constructor() {
-        this.user = {
-            id: '123',
-            firstName: 'Start',
-            lastName: 'Bootstrap',
-            email: 'no-reply@startbootstrap.com',
-        };
+    constructor(private http: HttpClient) { }
+
+    getPublicContent(): Observable<any> {
+        return this.http.get(API_URL + 'all', { responseType: 'text' });
     }
 
-    set user(user: User) {
-        userSubject.next(user);
+    getUserBoard(): Observable<any> {
+        return this.http.get(API_URL + 'user', { responseType: 'text' });
     }
 
-    get user$(): Observable<User> {
-        return userSubject.asObservable();
+    getAdminBoard(): Observable<any> {
+        return this.http.get(API_URL + 'admin', { responseType: 'text' });
     }
 }
